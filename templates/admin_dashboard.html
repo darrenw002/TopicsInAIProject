@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Admin Dashboard</h2>
+
+<h4>Pending Resources</h4>
+<ul>
+    {% for resource in pending %}
+    <li>
+        <strong>{{ resource.title }}</strong> ({{ resource.category }})<br>
+        <a href="{{ resource.link }}" target="_blank">{{ resource.link }}</a><br>
+        <p>{{ resource.description }}</p>
+        
+        <!-- Approve Form -->
+        <form action="{{ url_for('approve_resource', resource_id=resource.id) }}" method="POST">
+            <button type="submit" class="btn btn-success">Approve</button>
+        </form>
+        <hr>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
