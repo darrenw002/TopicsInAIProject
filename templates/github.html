@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Trending AI GitHub Repositories</h2>
+<ul>
+    {% for repo in repos %}
+    <li>
+        <strong>{{ repo.name }}</strong> - ★ {{ repo.stargazers_count }}
+        <br />
+        <a href="{{ repo.html_url }}" target="_blank">{{ repo.html_url }}</a>
+        <p>{{ repo.description }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}

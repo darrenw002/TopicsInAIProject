@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>AI Chatbot</h2>
+<form method="POST">
+    <div class="mb-3">
+        <label>Your Question</label>
+        <textarea class="form-control" name="message" rows="3">{{ user_input or "" }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Ask</button>
+</form>
+
+{% if bot_response %}
+<hr>
+<h4>Chatbot Answer:</h4>
+<p>{{ bot_response }}</p>
+{% endif %}
+{% endblock %}

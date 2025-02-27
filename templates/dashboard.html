@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>My Bookmarked Resources</h2>
+<ul>
+    {% for r in resources %}
+    <li>
+        <strong>{{ r.title }}</strong> ({{ r.category }})
+        <br />
+        <a href="{{ r.link }}">{{ r.link }}</a>
+        <p>{{ r.description }}</p>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
+
