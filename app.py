@@ -77,19 +77,26 @@ def dashboard():
     return render_template('dashboard.html', resources=bookmarked_resources)
 
 
+# AI Chatbot using OpenAI API
 @app.route('/chatbot', methods=['GET', 'POST'])
 def chatbot():
+    bot_response = None
+    user_input = None
+
     if request.method == 'POST':
         user_input = request.form.get('message')
-        
-        # GPT-3.5 ChatCompletion
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[{"role": "user", "content": user_input}]
-        )
-        bot_response = response.choices[0].message["content"]
-        return render_template('chatbot.html', user_input=user_input, bot_response=bot_response)
-    return render_template('chatbot.html')
+
+        if user_input:
+            openai.api_key = "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"
+
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[{"role": "user", "content": user_input}]
+            )
+
+            bot_response = response['choices'][0]['message']['content']
+
+    return render_template('chatbot.html', user_input=user_input, bot_response=bot_response)
 
 @app.route('/submit_resource', methods=['GET','POST'])
 def submit_resource():
