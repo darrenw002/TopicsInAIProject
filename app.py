@@ -53,7 +53,7 @@ def github_trending():
     url = "https://api.github.com/search/repositories?q=AI&sort=stars&order=desc"
     response = requests.get(url)
     data = response.json()
-    items = data.get('items', [])[:5]  # top 5
+    items = data.get('items', [])[:20]  # top 20
     
     # Pass these items to a template
     return render_template('github.html', repos=items)
@@ -71,10 +71,16 @@ def bookmark_resource(resource_id):
 
 @app.route('/dashboard')
 def dashboard():
-    user_id = 1  # for demonstration
-    bookmarked_ids = [b.resource_id for b in Bookmark.query.filter_by(user_id=user_id).all()]
-    bookmarked_resources = Resource.query.filter(Resource.id.in_(bookmarked_ids)).all()
-    return render_template('dashboard.html', resources=bookmarked_resources)
+    user_id = 1  # for demonstration, in real, use,  user_id = session.get('user_id')
+    resources = Resource.query.filter(Resource.approved == True).order_by(Resource.category, Resource.title).all()
+    #bookmarked_ids = [b.resource_id for b in Bookmark.query.filter_by(user_id=user_id).all()]
+    #bookmarked_resources = Resource.query.filter(Resource.id.in_(bookmarked_ids)).all()
+    if user_id:
+        bookmarked_ids = [b.resource_id for b in Bookmark.query.filter_by(user_id=user_id).all()]
+    else:
+        bookmarked_ids = []  # No user logged in
+    return render_template('dashboard.html', resources=resources, bookmarked_ids=bookmarked_ids)
+    #return render_template('dashboard.html', resources=bookmarked_resources)
 
 
 # AI Chatbot using OpenAI API
