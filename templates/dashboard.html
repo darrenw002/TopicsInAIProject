@@ -45,7 +45,7 @@
             <th onclick="sortTable(0)">Category</th>
             <th onclick="sortTable(1)">Title</th>
             <th onclick="sortTable(2)">Approved</th>
-            <th>Bookmarked</th>
+            <th onclick="sortTable(3)">Bookmarked</th>
         </tr>
     </thead>
     <tbody>
@@ -85,14 +85,20 @@ function sortTable(columnIndex) {
         currentSortDirection = 'asc';
     }
 
-    const isNumeric = !isNaN(rows[0].cells[columnIndex].innerText.trim());
-
     rows.sort((rowA, rowB) => {
-        const cellA = rowA.cells[columnIndex].innerText.toLowerCase();
-        const cellB = rowB.cells[columnIndex].innerText.toLowerCase();
+        let cellA = rowA.cells[columnIndex].innerText.trim();
+        let cellB = rowB.cells[columnIndex].innerText.trim();
 
-        let comparison = isNumeric ? parseFloat(cellA) - parseFloat(cellB) : cellA.localeCompare(cellB);
+        // Handle "Bookmarked" column specifically (column 3 - adjust if column index changes)
+        if (columnIndex === 3) {
+            cellA = (cellA === '✔️') ? 1 : 0;
+            cellB = (cellB === '✔️') ? 1 : 0;
+        } else {
+            cellA = cellA.toLowerCase();
+            cellB = cellB.toLowerCase();
+        }
 
+        let comparison = (cellA < cellB) ? -1 : (cellA > cellB) ? 1 : 0;
         return currentSortDirection === 'asc' ? comparison : -comparison;
     });
 
