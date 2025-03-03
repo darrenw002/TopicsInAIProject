@@ -1,15 +1,109 @@
 {% extends "layout.html" %}
 {% block content %}
-<h2>My Bookmarked Resources</h2>
-<ul>
-    {% for r in resources %}
-    <li>
-        <strong>{{ r.title }}</strong> ({{ r.category }})
-        <br />
-        <a href="{{ r.link }}">{{ r.link }}</a>
-        <p>{{ r.description }}</p>
-    </li>
-    {% endfor %}
-</ul>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Dashboard</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            cursor: pointer;
+            background-color: #f4f4f4;
+        }
+        th:hover {
+            background-color: #ddd;
+        }
+        #searchBar {
+            margin-bottom: 10px;
+            padding: 8px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
 
+<h2>Resources Dashboard</h2>
+
+<input type="text" id="searchBar" onkeyup="filterTable()" placeholder="Search resources...">
+
+<table id="resourcesTable">
+    <thead>
+        <tr>
+            <th onclick="sortTable(0)">Category</th>
+            <th onclick="sortTable(1)">Title</th>
+            <th onclick="sortTable(2)">Approved</th>
+            <th>Bookmarked</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for resource in resources %}
+        <tr>
+            <td>{{ resource.category }}</td>
+            <td>{{ resource.title }}</td>
+            <td>{{ "Yes" if resource.approved else "No" }}</td>
+            <td>
+                {% if resource.id in bookmarked_ids %}
+                    ✔️
+                {% else %}
+                    ❌
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+let currentSortColumn = -1;
+let currentSortDirection = 'asc';
+
+function sortTable(columnIndex) {
+    const table = document.getElementById("resourcesTable");
+    const rows = Array.from(table.rows).slice(1);
+
+    if (columnIndex === currentSortColumn) {
+        currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSortColumn = columnIndex;
+        currentSortDirection = 'asc';
+    }
+
+    const isNumeric = !isNaN(rows[0].cells[columnIndex].innerText.trim());
+
+    rows.sort((rowA, rowB) => {
+        const cellA = rowA.cells[columnIndex].innerText.toLowerCase();
+        const cellB = rowB.cells[columnIndex].innerText.toLowerCase();
+
+        let comparison = isNumeric ? parseFloat(cellA) - parseFloat(cellB) : cellA.localeCompare(cellB);
+
+        return currentSortDirection === 'asc' ? comparison : -comparison;
+    });
+
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+}
+
+function filterTable() {
+    const input = document.getElementById("searchBar").value.toLowerCase();
+    const rows = document.getElementById("resourcesTable").getElementsByTagName("tr");
+
+    for (let i = 1; i < rows.length; i++) {  // Skip header row
+        const row = rows[i];
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(input) ? "" : "none";
+    }
+}
+</script>
+
+</body>
+</html>
+{% endblock %}
