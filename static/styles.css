@@ -1,0 +1,188 @@
+/* ------------------------------
+   1. GLOBAL RESETS & BODY
+------------------------------ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    /* A subtle gradient to evoke a futuristic feel */
+    background: linear-gradient(135deg, #eef2f7 0%, #f6f9fc 100%);
+    font-family: "Open Sans", "Helvetica Neue", Arial, sans-serif;
+    color: #2c3e50;
+    line-height: 1.6;
+  }
+  
+  /* ------------------------------
+     2. NAVBAR & HEADER
+  ------------------------------ */
+  .navbar {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e6e9ec;
+  }
+  
+  .navbar-brand {
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: #2c3e50 !important;
+  }
+  
+  .navbar-nav .nav-link {
+    color: #2c3e50 !important;
+    margin-right: 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .navbar-nav .nav-link:hover {
+    color: #1e90ff !important; /* Hover effect */
+  }
+  
+  /* ------------------------------
+     3. HEADINGS & TEXT
+  ------------------------------ */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: #2c3e50;
+    margin-bottom: 1rem;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.7rem;
+  }
+  
+  p {
+    margin-bottom: 1rem;
+  }
+  
+  /* ------------------------------
+     4. BUTTONS
+  ------------------------------ */
+  .btn-primary {
+    background-color: #5762d5;
+    border-color: #5762d5;
+    transition: background-color 0.2s, border-color 0.2s;
+  }
+  
+  .btn-primary:hover {
+    background-color: #444fb3;
+    border-color: #3a45a0;
+  }
+  
+  .btn-success {
+    background-color: #27ae60;
+    border-color: #27ae60;
+  }
+  .btn-success:hover {
+    background-color: #219150;
+    border-color: #1d7d45;
+  }
+  
+  /* ------------------------------
+     5. FORMS & INPUTS
+  ------------------------------ */
+  .form-control {
+    margin-bottom: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 0.6rem;
+  }
+  
+  label {
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+    display: inline-block;
+  }
+  
+  /* ------------------------------
+     6. CARD / BOX STYLES
+  ------------------------------ */
+  .card {
+    background-color: #fff;
+    border: 1px solid #e2e4e8;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card-text {
+    font-size: 0.95rem;
+  }
+  
+  /* ------------------------------
+     7. ADMIN DASHBOARD
+  ------------------------------ */
+  .admin-list-item {
+    padding: 1rem;
+    border: 1px solid #e2e4e8;
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    background-color: #fafbfc;
+    position: relative;
+  }
+  
+  .admin-list-item h4 {
+    margin-bottom: 0.5rem;
+  }
+  
+  /* Approve button styling */
+  .admin-list-item .btn-success {
+    float: right;
+  }
+  
+  /* ------------------------------
+     8. TABLES
+  ------------------------------ */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+  }
+  
+  table th, table td {
+    padding: 0.75rem;
+    border: 1px solid #dee2e6;
+  }
+  
+  table th {
+    background-color: #f1f3f5;
+    font-weight: 600;
+  }
+  
+  /* ------------------------------
+     9. UTILITY CLASSES
+  ------------------------------ */
+  .mt-4  { margin-top: 1.5rem !important; }
+  .mb-4  { margin-bottom: 1.5rem !important; }
+  .pt-4  { padding-top: 1.5rem !important; }
+  .pb-4  { padding-bottom: 1.5rem !important; }
+  
+  .text-center { text-align: center !important; }
+  .text-muted { color: #6c757d !important; }
+  
+  .shadow-sm { box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important; }
+  .shadow { box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important; }
+  
+  /* ------------------------------
+     10. FOOTER
+  ------------------------------ */
+  footer {
+    background-color: #f1f3f5;
+    color: #495057;
+    padding: 1rem 0;
+    text-align: center;
+    margin-top: 2rem;
+    border-top: 1px solid #dee2e6;
+  }
+  
