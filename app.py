@@ -101,10 +101,31 @@ def bookmark_resource(resource_id):
     flash("Resource bookmarked!")
     return redirect(url_for('search'))
 
+@app.route('/toggle_bookmark/<int:resource_id>', methods=['POST'])
+@login_required
+def toggle_bookmark(resource_id):
+    user_id = current_user.id
+    data = request.get_json()
+    is_bookmarked = data.get('bookmarked')
+
+    if is_bookmarked:
+        # Add bookmark
+        if not Bookmark.query.filter_by(user_id=user_id, resource_id=resource_id).first():
+            db.session.add(Bookmark(user_id=user_id, resource_id=resource_id))
+    else:
+        # Remove bookmark
+        Bookmark.query.filter_by(user_id=user_id, resource_id=resource_id).delete()
+
+    db.session.commit()
+
+    return jsonify({'success': True, 'bookmarked': is_bookmarked})
+
+
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    user_id = 1  # for demonstration, in real, use,  user_id = session.get('user_id')
+    #user_id = 1  # for demonstration, in real, use,  user_id = session.get('user_id')
+    user_id = current_user.id
     resources = Resource.query.filter(Resource.approved == True).order_by(Resource.category, Resource.title).all()
     #bookmarked_ids = [b.resource_id for b in Bookmark.query.filter_by(user_id=user_id).all()]
     #bookmarked_resources = Resource.query.filter(Resource.id.in_(bookmarked_ids)).all()
