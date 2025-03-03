@@ -30,8 +30,36 @@ def load_user(user_id):
 def index():
     return render_template('index.html')
 
+# Register route
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        # Get form data
+        username = request.form['username']
+        password = request.form['password']
+        
+        # Check if user already exists
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return "Username already taken"
+        
+        # Create the new user (plain-text password)
+        new_user = User(username=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        # Optional: Log the user in immediately
+        login_user(new_user)
+        
+        return redirect(url_for('login'))
+    
+    # If GET, just show the register form
+    return render_template('register.html')
+
 # Search Route
 @app.route('/search')
+@login_required
 def search():
     query = request.args.get('query', '')
     category = request.args.get('category', '')
@@ -48,6 +76,7 @@ def search():
     return render_template('search.html', results=results, query=query, category=category)
 
 @app.route('/github_trending')
+@login_required
 def github_trending():
     # Searching for AI-related repos, sorted by stars
     url = "https://api.github.com/search/repositories?q=AI&sort=stars&order=desc"
@@ -59,6 +88,7 @@ def github_trending():
     return render_template('github.html', repos=items)
 
 @app.route('/bookmark/<int:resource_id>', methods=['POST'])
+@login_required
 def bookmark_resource(resource_id):
     # Check if user is logged in (we’ll implement login later)
     user_id = 1  # For demo, assume user 1
@@ -70,6 +100,7 @@ def bookmark_resource(resource_id):
     return redirect(url_for('search'))
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
     user_id = 1  # for demonstration, in real, use,  user_id = session.get('user_id')
     resources = Resource.query.filter(Resource.approved == True).order_by(Resource.category, Resource.title).all()
@@ -83,8 +114,8 @@ def dashboard():
     #return render_template('dashboard.html', resources=bookmarked_resources)
 
 
-# AI Chatbot using OpenAI API
 @app.route('/chatbot', methods=['GET', 'POST'])
+@login_required#
 def chatbot():
     bot_response = None
     user_input = None
@@ -105,6 +136,7 @@ def chatbot():
     return render_template('chatbot.html', user_input=user_input, bot_response=bot_response)
 
 @app.route('/submit_resource', methods=['GET','POST'])
+@login_required
 def submit_resource():
     if request.method == 'POST':
         title = request.form.get('title')
@@ -143,8 +175,9 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        
         user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
+        if user and user.password == password:  # plain-text check
             login_user(user)
             return redirect(url_for('index'))
         else:
