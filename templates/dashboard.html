@@ -28,6 +28,9 @@
             padding: 8px;
             width: 300px;
         }
+        .bookmark-toggle {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -49,14 +52,18 @@
         {% for resource in resources %}
         <tr>
             <td>{{ resource.category }}</td>
-            <td>{{ resource.title }}</td>
+            <td><a href="{{ resource.link }}" target="_blank">{{ resource.title }}</a></td>
             <td>{{ "Yes" if resource.approved else "No" }}</td>
             <td>
-                {% if resource.id in bookmarked_ids %}
-                    ✔️
-                {% else %}
-                    ❌
-                {% endif %}
+                <span class="bookmark-toggle"
+                      data-resource-id="{{ resource.id }}"
+                      onclick="toggleBookmark(this)">
+                    {% if resource.id in bookmarked_ids %}
+                        ✔️
+                    {% else %}
+                        ❌
+                    {% endif %}
+                </span>
             </td>
         </tr>
         {% endfor %}
@@ -96,11 +103,35 @@ function filterTable() {
     const input = document.getElementById("searchBar").value.toLowerCase();
     const rows = document.getElementById("resourcesTable").getElementsByTagName("tr");
 
-    for (let i = 1; i < rows.length; i++) {  // Skip header row
+    for (let i = 1; i < rows.length; i++) {
         const row = rows[i];
         const text = row.innerText.toLowerCase();
         row.style.display = text.includes(input) ? "" : "none";
     }
+}
+
+function toggleBookmark(element) {
+    const resourceId = element.getAttribute('data-resource-id');
+    const isBookmarked = element.innerText.trim() === '✔️';
+
+    fetch(`/toggle_bookmark/${resourceId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ bookmarked: !isBookmarked })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            element.innerText = data.bookmarked ? '✔️' : '❌';
+        } else {
+            alert('Failed to update bookmark status');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 </script>
 
