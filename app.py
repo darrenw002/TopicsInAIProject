@@ -8,6 +8,8 @@ from models import Bookmark
 import openai
 from flask_login import LoginManager, login_required, login_user, logout_user, current_user
 from models import User
+from flask import abort
+
 
 # Create the Flask Application
 app = Flask(__name__)
@@ -157,8 +159,11 @@ def submit_resource():
     return render_template('submit_resource.html')
 
 @app.route('/admin/approve/<int:resource_id>', methods=['POST'])
+@login_required
 def approve_resource(resource_id):
-    # Normally you'd check if user is admin
+    if current_user.username != 'admin':  # Ensure only admin can approve
+        abort(403)  # Forbidden error if non-admin tries
+
     resource = Resource.query.get(resource_id)
     if resource:
         resource.approved = True
@@ -166,7 +171,11 @@ def approve_resource(resource_id):
     return redirect(url_for('admin_dashboard'))
 
 @app.route('/admin')
+@login_required
 def admin_dashboard():
+    if current_user.username != 'admin':  # Restrict access
+        abort(403)  # Forbidden error if non-admin tries
+
     pending = Resource.query.filter_by(approved=False).all()
     return render_template('admin_dashboard.html', pending=pending)
 
